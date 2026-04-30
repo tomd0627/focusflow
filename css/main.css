@@ -172,6 +172,9 @@ input:focus:not(:focus-visible) {
    ============================================================ */
 
 .site-header {
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  background-color: rgb(18 16 16 / 80%);
   border-block-end: 1px solid var(--c-border);
   inset-block-start: 0;
   inset-inline: 0;
@@ -302,6 +305,10 @@ input:focus:not(:focus-visible) {
   box-shadow:
     0 0 48px rgb(122 172 142 / 35%),
     0 4px 16px rgb(0 0 0 / 40%);
+}
+
+.timer-section--break .btn-ghost:hover {
+  color: var(--c-break);
 }
 
 .btn-danger {
@@ -503,6 +510,16 @@ input:focus:not(:focus-visible) {
   background: var(--c-break);
 }
 
+.dot--current {
+  background: var(--c-accent);
+  opacity: 0.4;
+  transform: scale(1.08);
+}
+
+.timer-section--break .dot--current {
+  background: var(--c-break);
+}
+
 .session-count-label {
   color: var(--c-text-muted);
   font-size: 0.75rem;
@@ -554,6 +571,10 @@ input:focus:not(:focus-visible) {
   border-color: rgb(212 144 74 / 40%);
 }
 
+body[data-mode="break"] .soundscape-card--active {
+  border-color: rgb(122 172 142 / 40%);
+}
+
 .soundscape-toggle {
   align-items: center;
   background: transparent;
@@ -573,6 +594,10 @@ input:focus:not(:focus-visible) {
 
 .soundscape-toggle[aria-pressed="true"] {
   color: var(--c-accent);
+}
+
+body[data-mode="break"] .soundscape-toggle[aria-pressed="true"] {
+  color: var(--c-break);
 }
 
 .sound-icon {
@@ -654,6 +679,14 @@ input:focus:not(:focus-visible) {
 .volume-slider:focus-visible {
   outline: 2px solid var(--c-accent);
   outline-offset: 3px;
+}
+
+body[data-mode="break"] .volume-slider::-webkit-slider-thumb {
+  background: var(--c-break);
+}
+
+body[data-mode="break"] .volume-slider::-moz-range-thumb {
+  background: var(--c-break);
 }
 
 /* ============================================================
@@ -963,4 +996,42 @@ input:focus:not(:focus-visible) {
   .timer-time {
     font-size: 4.5rem;
   }
+}
+
+/* ============================================================
+   23. Tooltips
+   ============================================================ */
+
+[data-tooltip] {
+  position: relative;
+}
+
+[data-tooltip]::after {
+  background: var(--c-surface-raised);
+  border: 1px solid var(--c-border-strong);
+  border-radius: var(--radius-sm);
+  bottom: calc(100% + 6px);
+  color: var(--c-text-secondary);
+  content: attr(data-tooltip);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  left: 50%;
+  opacity: 0;
+  padding-block: 3px;
+  padding-inline: 8px;
+  pointer-events: none;
+  position: absolute;
+  transform: translateX(-50%) translateY(4px);
+  transition:
+    opacity var(--transition-fast),
+    transform var(--transition-fast);
+  white-space: nowrap;
+  z-index: 10;
+}
+
+[data-tooltip]:hover::after,
+[data-tooltip]:focus-visible::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }

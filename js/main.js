@@ -112,6 +112,7 @@ function updateRing(remaining, mode) {
 function renderMode(mode) {
   const isBreak = mode !== "work";
   timerSection.classList.toggle("timer-section--break", isBreak);
+  document.body.dataset.mode = isBreak ? "break" : "work";
   timerLabelEl.textContent = MODE_LABELS[mode];
 
   tabs.forEach((tab) => {
@@ -143,6 +144,7 @@ function renderSessionCounter(count, sessionsUntilLong) {
 
   sessionDotsEl.querySelectorAll(".dot").forEach((dot, i) => {
     dot.classList.toggle("dot--filled", i < filled);
+    dot.classList.toggle("dot--current", i === filled);
   });
 
   const next = filled + 1;
@@ -368,6 +370,7 @@ function init() {
   timerTimeEl.textContent = formatTime(saved.remaining);
   timerTimeEl.dateTime = buildDatetime(saved.remaining);
   updateRing(saved.remaining, saved.mode);
+  document.body.dataset.mode = saved.mode === "work" ? "work" : "break";
   renderMode(saved.mode);
   renderPlayState(false);
   renderSessionCounter(saved.sessionCount, settings.sessionsUntilLong);

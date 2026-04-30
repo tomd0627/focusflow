@@ -402,6 +402,7 @@
           aria-controls="settings-dialog"
           aria-expanded="false"
           aria-label="Open settings"
+          data-tooltip="Settings"
           type="button"
         >
           <svg class="icon" aria-hidden="true" focusable="false">
@@ -469,7 +470,13 @@
 
         <!-- Controls -->
         <div class="timer-controls">
-          <button class="btn-icon btn-ghost" id="reset-btn" aria-label="Reset timer" type="button">
+          <button
+            class="btn-icon btn-ghost"
+            id="reset-btn"
+            aria-label="Reset timer"
+            data-tooltip="Reset"
+            type="button"
+          >
             <svg class="icon" aria-hidden="true" focusable="false">
               <use href="#icon-reset" />
             </svg>
@@ -491,6 +498,7 @@
             class="btn-icon btn-ghost"
             id="skip-btn"
             aria-label="Skip to next session"
+            data-tooltip="Skip session"
             type="button"
           >
             <svg class="icon" aria-hidden="true" focusable="false">
@@ -684,6 +692,14 @@
               </button>
             </div>
             <p class="settings-hint" id="notification-status" role="status" aria-live="polite"></p>
+          </div>
+
+          <!-- How it works -->
+          <div class="settings-group">
+            <p class="settings-hint">
+              Work sessions cycle into short breaks. After completing all work sessions, you earn a
+              long break — then the cycle repeats.
+            </p>
           </div>
 
           <!-- Danger zone -->
