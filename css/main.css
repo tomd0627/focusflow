@@ -1,0 +1,939 @@
+/* ============================================================
+   1. Custom Properties
+   ============================================================ */
+
+:root {
+  /* Colors */
+  --c-accent: #d4904a;
+  --c-accent-glow: rgb(212 144 74 / 18%);
+  --c-accent-hover: #e0a060;
+  --c-bg: #121010;
+  --c-border: rgb(240 232 216 / 8%);
+  --c-border-strong: rgb(240 232 216 / 15%);
+  --c-break: #7aac8e;
+  --c-break-glow: rgb(122 172 142 / 18%);
+  --c-danger: #c06b52;
+  --c-danger-hover: #d07a60;
+  --c-focus-ring: rgb(212 144 74 / 45%);
+  --c-surface: #1d1917;
+  --c-surface-raised: #272220;
+  --c-text-muted: #756456;
+  --c-text-primary: #f0e8d8;
+  --c-text-secondary: #b5a394;
+
+  /* Typography */
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-display: "DM Mono", "Courier New", monospace;
+
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+
+  /* Radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-full: 9999px;
+
+  /* Timer ring */
+  --ring-circumference: 729.03;
+  --ring-color: var(--c-accent);
+  --ring-offset: 0;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.25s ease;
+  --transition-slow: 0.4s ease;
+}
+
+/* ============================================================
+   2. Reset & Base
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  color-scheme: dark;
+  scroll-behavior: smooth;
+  text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--c-bg);
+  color: var(--c-text-primary);
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.5;
+  min-block-size: 100dvh;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+fieldset {
+  border: none;
+}
+
+input {
+  font-family: inherit;
+}
+
+/* ============================================================
+   3. Utility
+   ============================================================ */
+
+.sr-only {
+  block-size: 1px;
+  clip: rect(0, 0, 0, 0);
+  inline-size: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+}
+
+.icon-sprite {
+  block-size: 0;
+  inline-size: 0;
+  overflow: hidden;
+  position: absolute;
+}
+
+.icon {
+  block-size: 1.25rem;
+  display: block;
+  flex-shrink: 0;
+  inline-size: 1.25rem;
+}
+
+.icon--sm {
+  block-size: 1rem;
+  inline-size: 1rem;
+}
+
+.icon--lg {
+  block-size: 1.5rem;
+  inline-size: 1.5rem;
+}
+
+/* ============================================================
+   4. Skip Link
+   ============================================================ */
+
+.skip-link {
+  background-color: var(--c-accent);
+  border-radius: var(--radius-sm);
+  color: var(--c-bg);
+  font-size: 0.875rem;
+  font-weight: 600;
+  inset-block-start: var(--space-md);
+  inset-inline-start: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  position: absolute;
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform var(--transition-fast);
+  z-index: 9999;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* ============================================================
+   5. Focus Styles
+   ============================================================ */
+
+:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 3px;
+}
+
+/* Remove default outline where we apply custom styles */
+button:focus:not(:focus-visible),
+input:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ============================================================
+   6. Site Header
+   ============================================================ */
+
+.site-header {
+  border-block-end: 1px solid var(--c-border);
+  inset-block-start: 0;
+  inset-inline: 0;
+  padding-block: var(--space-md);
+  padding-inline: var(--space-lg);
+  position: sticky;
+  z-index: 100;
+}
+
+.header-inner {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-inline: auto;
+  max-inline-size: 680px;
+}
+
+.logo {
+  align-items: center;
+  color: var(--c-accent);
+  display: flex;
+  gap: var(--space-sm);
+  user-select: none;
+}
+
+.logo-icon {
+  color: var(--c-accent);
+}
+
+.logo-name {
+  color: var(--c-text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* ============================================================
+   7. Main Layout
+   ============================================================ */
+
+.main-content {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-2xl);
+  margin-inline: auto;
+  max-inline-size: 680px;
+  padding-block: var(--space-2xl);
+  padding-inline: var(--space-lg);
+  inline-size: 100%;
+}
+
+/* ============================================================
+   8. Buttons
+   ============================================================ */
+
+.btn-icon {
+  align-items: center;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  color: var(--c-text-secondary);
+  display: flex;
+  justify-content: center;
+  padding: var(--space-sm);
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.btn-icon:hover {
+  background: var(--c-surface);
+  color: var(--c-text-primary);
+}
+
+.btn-ghost {
+  block-size: 2.75rem;
+  border-radius: var(--radius-full);
+  inline-size: 2.75rem;
+}
+
+.btn-ghost:hover {
+  background: var(--c-surface);
+  color: var(--c-accent);
+}
+
+.btn-play {
+  align-items: center;
+  background: var(--c-accent);
+  block-size: 5rem;
+  border: none;
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 32px var(--c-accent-glow), 0 4px 12px rgb(0 0 0 / 30%);
+  color: var(--c-bg);
+  display: flex;
+  inline-size: 5rem;
+  justify-content: center;
+  transition: background var(--transition-fast), box-shadow var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.btn-play:hover {
+  background: var(--c-accent-hover);
+  box-shadow: 0 0 48px rgb(212 144 74 / 35%), 0 4px 16px rgb(0 0 0 / 40%);
+  transform: scale(1.04);
+}
+
+.btn-play:active {
+  transform: scale(0.97);
+}
+
+/* Break mode play button */
+.timer-section--break .btn-play {
+  background: var(--c-break);
+  box-shadow: 0 0 32px var(--c-break-glow), 0 4px 12px rgb(0 0 0 / 30%);
+}
+
+.timer-section--break .btn-play:hover {
+  box-shadow: 0 0 48px rgb(122 172 142 / 35%), 0 4px 16px rgb(0 0 0 / 40%);
+}
+
+.btn-danger {
+  background: transparent;
+  border: 1px solid var(--c-danger);
+  border-radius: var(--radius-sm);
+  color: var(--c-danger);
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding-block: var(--space-sm);
+  padding-inline: var(--space-md);
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.btn-danger:hover {
+  background: var(--c-danger);
+  color: var(--c-text-primary);
+}
+
+/* ============================================================
+   9. Session Tabs
+   ============================================================ */
+
+.session-tabs {
+  background: var(--c-surface);
+  border-radius: var(--radius-full);
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+}
+
+.tab {
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-full);
+  color: var(--c-text-muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding-block: 0.375rem;
+  padding-inline: var(--space-md);
+  transition: background var(--transition-fast), color var(--transition-fast);
+  white-space: nowrap;
+}
+
+.tab:hover {
+  color: var(--c-text-secondary);
+}
+
+.tab--active,
+.tab[aria-selected="true"] {
+  background: var(--c-surface-raised);
+  color: var(--c-text-primary);
+}
+
+/* Break mode tab active state */
+.timer-section--break .tab--active,
+.timer-section--break .tab[aria-selected="true"] {
+  color: var(--c-break);
+}
+
+/* ============================================================
+   10. Timer Ring
+   ============================================================ */
+
+.timer-section {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  inline-size: 100%;
+}
+
+.timer-wrapper {
+  align-items: center;
+  display: grid;
+  justify-items: center;
+  position: relative;
+}
+
+.timer-ring {
+  display: block;
+  max-inline-size: 280px;
+  overflow: visible;
+}
+
+.ring-track {
+  fill: none;
+  stroke: var(--c-border-strong);
+  stroke-width: 5;
+}
+
+.ring-glow {
+  fill: none;
+  opacity: 0.45;
+  stroke: var(--ring-color);
+  stroke-dasharray: var(--ring-circumference);
+  stroke-dashoffset: var(--ring-offset);
+  stroke-linecap: round;
+  stroke-width: 7;
+  transform: rotate(-90deg);
+  transform-origin: center;
+  transition: stroke var(--transition-slow), stroke-dashoffset 0.75s linear;
+}
+
+.ring-progress {
+  fill: none;
+  stroke: var(--ring-color);
+  stroke-dasharray: var(--ring-circumference);
+  stroke-dashoffset: var(--ring-offset);
+  stroke-linecap: round;
+  stroke-width: 5;
+  transform: rotate(-90deg);
+  transform-origin: center;
+  transition: stroke var(--transition-slow), stroke-dashoffset 0.75s linear;
+}
+
+/* Break mode ring color */
+.timer-section--break {
+  --ring-color: var(--c-break);
+}
+
+.timer-display {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  grid-column: 1;
+  grid-row: 1;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.timer-time {
+  color: var(--c-text-primary);
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 10vw, 4.5rem);
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  tabular-nums: initial;
+}
+
+.timer-label {
+  color: var(--c-text-muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   11. Timer Controls
+   ============================================================ */
+
+.timer-controls {
+  align-items: center;
+  display: flex;
+  gap: var(--space-xl);
+}
+
+/* ============================================================
+   12. Session Counter
+   ============================================================ */
+
+.session-counter {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.session-dots {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.dot {
+  background: var(--c-border-strong);
+  block-size: 8px;
+  border-radius: var(--radius-full);
+  display: block;
+  inline-size: 8px;
+  transition: background var(--transition-base), transform var(--transition-base);
+}
+
+.dot--filled {
+  background: var(--c-accent);
+  transform: scale(1.15);
+}
+
+.timer-section--break .dot--filled {
+  background: var(--c-break);
+}
+
+.session-count-label {
+  color: var(--c-text-muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+/* ============================================================
+   13. Soundscape Section
+   ============================================================ */
+
+.soundscape-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  inline-size: 100%;
+}
+
+.section-heading {
+  color: var(--c-text-muted);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.soundscape-grid {
+  display: grid;
+  gap: var(--space-sm);
+  grid-template-columns: 1fr;
+}
+
+/* ============================================================
+   14. Soundscape Card
+   ============================================================ */
+
+.soundscape-card {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow: hidden;
+  transition: border-color var(--transition-base);
+}
+
+.soundscape-card--active {
+  border-color: rgb(212 144 74 / 40%);
+}
+
+.soundscape-toggle {
+  align-items: center;
+  background: transparent;
+  border: none;
+  color: var(--c-text-secondary);
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  text-align: start;
+  transition: color var(--transition-fast);
+  inline-size: 100%;
+}
+
+.soundscape-toggle:hover {
+  color: var(--c-text-primary);
+}
+
+.soundscape-toggle[aria-pressed="true"] {
+  color: var(--c-accent);
+}
+
+.sound-icon {
+  flex-shrink: 0;
+}
+
+.sound-name {
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.soundscape-volume {
+  align-items: center;
+  border-block-start: 1px solid var(--c-border);
+  display: flex;
+  gap: var(--space-sm);
+  opacity: 0;
+  padding-block: var(--space-sm);
+  padding-inline: var(--space-lg);
+  pointer-events: none;
+  transition: opacity var(--transition-base);
+}
+
+.soundscape-card--active .soundscape-volume {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ============================================================
+   15. Volume Slider
+   ============================================================ */
+
+.volume-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--c-border-strong);
+  block-size: 4px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  flex: 1;
+  outline: none;
+  transition: background var(--transition-fast);
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--c-accent);
+  block-size: 14px;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  inline-size: 14px;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.volume-slider::-moz-range-thumb {
+  background: var(--c-accent);
+  block-size: 14px;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  inline-size: 14px;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.volume-slider:hover::-webkit-slider-thumb {
+  transform: scale(1.2);
+}
+
+.volume-slider:hover::-moz-range-thumb {
+  transform: scale(1.2);
+}
+
+.volume-slider:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 3px;
+}
+
+/* ============================================================
+   16. Settings Dialog
+   ============================================================ */
+
+.settings-dialog {
+  background: var(--c-surface);
+  block-size: auto;
+  border: 1px solid var(--c-border-strong);
+  border-radius: var(--radius-xl, 1.25rem);
+  box-shadow: 0 24px 64px rgb(0 0 0 / 60%);
+  color: var(--c-text-primary);
+  inline-size: min(92vw, 480px);
+  margin: auto;
+  overflow: hidden;
+  padding: 0;
+}
+
+.settings-dialog::backdrop {
+  backdrop-filter: blur(4px);
+  background: rgb(0 0 0 / 65%);
+}
+
+.settings-inner {
+  display: flex;
+  flex-direction: column;
+  max-block-size: 90dvh;
+  overflow-y: auto;
+}
+
+.settings-header {
+  align-items: center;
+  background: var(--c-surface);
+  border-block-end: 1px solid var(--c-border);
+  display: flex;
+  justify-content: space-between;
+  padding-block: var(--space-lg);
+  padding-inline: var(--space-xl);
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 1;
+}
+
+.settings-title {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.settings-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-block: var(--space-md);
+  padding-inline: var(--space-xl);
+}
+
+.settings-group {
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding-block: var(--space-lg);
+}
+
+.settings-group + .settings-group {
+  border-block-start: 1px solid var(--c-border);
+}
+
+.settings-group--border-top {
+  border-block-start: 1px solid var(--c-border);
+}
+
+.settings-legend {
+  color: var(--c-text-secondary);
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin-block-end: var(--space-sm);
+  text-transform: uppercase;
+}
+
+.settings-legend-unit {
+  color: var(--c-text-muted);
+  font-weight: 400;
+  text-transform: none;
+}
+
+.settings-row {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding-block: var(--space-xs);
+}
+
+.settings-label {
+  color: var(--c-text-primary);
+  font-size: 0.9375rem;
+}
+
+.settings-hint {
+  color: var(--c-text-muted);
+  font-size: 0.8125rem;
+  min-block-size: 1.25em;
+}
+
+/* Number inputs */
+.number-input {
+  background: var(--c-surface-raised);
+  border: 1px solid var(--c-border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--c-text-primary);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  inline-size: 4.5rem;
+  padding-block: var(--space-xs);
+  padding-inline: var(--space-sm);
+  text-align: center;
+  transition: border-color var(--transition-fast);
+}
+
+.number-input:hover {
+  border-color: var(--c-text-muted);
+}
+
+.number-input:focus-visible {
+  border-color: var(--c-accent);
+  outline: none;
+}
+
+/* Spinner arrow removal */
+.number-input::-webkit-inner-spin-button,
+.number-input::-webkit-outer-spin-button {
+  opacity: 0.4;
+}
+
+/* ============================================================
+   17. Toggle Switch
+   ============================================================ */
+
+.toggle-switch {
+  background: var(--c-surface-raised);
+  border: 2px solid var(--c-border-strong);
+  border-radius: var(--radius-full);
+  block-size: 1.625rem;
+  cursor: pointer;
+  display: block;
+  flex-shrink: 0;
+  inline-size: 2.75rem;
+  padding: 2px;
+  position: relative;
+  transition: background var(--transition-base), border-color var(--transition-base);
+}
+
+.toggle-switch[aria-checked="true"] {
+  background: var(--c-accent);
+  border-color: var(--c-accent);
+}
+
+.toggle-thumb {
+  background: var(--c-text-muted);
+  block-size: 1rem;
+  border-radius: var(--radius-full);
+  display: block;
+  inline-size: 1rem;
+  inset-block-start: 50%;
+  inset-inline-start: 2px;
+  position: absolute;
+  transform: translateY(-50%);
+  transition: background var(--transition-base), inset-inline-start var(--transition-base);
+}
+
+.toggle-switch[aria-checked="true"] .toggle-thumb {
+  background: var(--c-bg);
+  inset-inline-start: calc(100% - 1rem - 2px);
+}
+
+/* ============================================================
+   18. Toast
+   ============================================================ */
+
+.toast {
+  align-items: center;
+  background: var(--c-surface-raised);
+  border: 1px solid var(--c-border-strong);
+  border-radius: var(--radius-lg);
+  bottom: var(--space-xl);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 40%);
+  color: var(--c-text-primary);
+  display: flex;
+  font-size: 0.9375rem;
+  gap: var(--space-sm);
+  inset-block-end: var(--space-xl);
+  inset-inline-end: var(--space-xl);
+  max-inline-size: 320px;
+  opacity: 0;
+  padding-block: var(--space-md);
+  padding-inline: var(--space-lg);
+  pointer-events: none;
+  position: fixed;
+  transform: translateY(8px);
+  transition: opacity var(--transition-base), transform var(--transition-base);
+  z-index: 200;
+}
+
+.toast--visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.toast-icon {
+  color: var(--c-accent);
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   19. Animations
+   ============================================================ */
+
+@keyframes ring-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.timer-section[data-state="running"] .ring-glow {
+  animation: ring-pulse 2.5s ease-in-out infinite;
+}
+
+/* ============================================================
+   20. Reduced Motion
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  .ring-progress,
+  .ring-glow {
+    transition: none;
+  }
+}
+
+/* ============================================================
+   21. Responsive — Tablet (≥ 560px)
+   ============================================================ */
+
+@media (min-width: 560px) {
+  .soundscape-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .soundscape-card {
+    flex-direction: column;
+  }
+
+  .soundscape-toggle {
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding-block: var(--space-lg);
+    text-align: center;
+  }
+
+  .soundscape-volume {
+    justify-content: center;
+    padding-inline: var(--space-md);
+  }
+}
+
+/* ============================================================
+   22. Responsive — Desktop (≥ 768px)
+   ============================================================ */
+
+@media (min-width: 768px) {
+  .main-content {
+    gap: var(--space-2xl);
+    padding-block: var(--space-3xl, 4rem);
+  }
+
+  .timer-ring {
+    max-inline-size: 300px;
+  }
+
+  .timer-time {
+    font-size: 4.5rem;
+  }
+}

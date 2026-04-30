@@ -1,0 +1,731 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="FocusFlow — Pomodoro timer with ambient soundscapes generated entirely via the Web Audio API."
+    />
+    <title>FocusFlow</title>
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=Inter:wght@400;500;600&display=swap"
+    />
+
+    <link rel="stylesheet" href="/css/main.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <!-- SVG icon sprite -->
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="icon-sprite"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <defs>
+        <symbol id="icon-play" viewBox="0 0 24 24">
+          <polygon fill="currentColor" points="5,3 19,12 5,21" />
+        </symbol>
+
+        <symbol id="icon-pause" viewBox="0 0 24 24">
+          <rect fill="currentColor" height="16" rx="1.5" width="4" x="6" y="4" />
+          <rect fill="currentColor" height="16" rx="1.5" width="4" x="14" y="4" />
+        </symbol>
+
+        <symbol id="icon-reset" viewBox="0 0 24 24">
+          <path
+            d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+          />
+          <polyline
+            fill="none"
+            points="3,3 3,8 8,8"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+          />
+        </symbol>
+
+        <symbol id="icon-skip" viewBox="0 0 24 24">
+          <polygon fill="currentColor" points="5,4 15,12 5,20" />
+          <line
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-width="2.5"
+            x1="19"
+            x2="19"
+            y1="5"
+            y2="19"
+          />
+        </symbol>
+
+        <symbol id="icon-settings" viewBox="0 0 24 24">
+          <line
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-width="2"
+            x1="4"
+            x2="16"
+            y1="6"
+            y2="6"
+          />
+          <line
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-width="2"
+            x1="8"
+            x2="20"
+            y1="12"
+            y2="12"
+          />
+          <line
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-width="2"
+            x1="4"
+            x2="16"
+            y1="18"
+            y2="18"
+          />
+          <circle cx="19" cy="6" fill="none" r="2.5" stroke="currentColor" stroke-width="2" />
+          <circle cx="5" cy="12" fill="none" r="2.5" stroke="currentColor" stroke-width="2" />
+          <circle cx="19" cy="18" fill="none" r="2.5" stroke="currentColor" stroke-width="2" />
+        </symbol>
+
+        <symbol id="icon-close" viewBox="0 0 24 24">
+          <line
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-width="2"
+            x1="18"
+            x2="6"
+            y1="6"
+            y2="18"
+          />
+          <line
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-width="2"
+            x1="6"
+            x2="18"
+            y1="6"
+            y2="18"
+          />
+        </symbol>
+
+        <symbol id="icon-bell" viewBox="0 0 24 24">
+          <path
+            d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+          />
+          <path
+            d="M13.73 21a2 2 0 0 1-3.46 0"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+          />
+        </symbol>
+
+        <symbol id="icon-bell-off" viewBox="0 0 24 24">
+          <path
+            d="M8.56 2.9A7 7 0 0 1 19 9v4m-2 4H3s3-2 3-9a4.67 4.67 0 0 1 .3-1.7"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+          />
+          <path
+            d="M9 17v1a3 3 0 0 0 5.12 2.12"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+          />
+          <line
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-width="2"
+            x1="1"
+            x2="23"
+            y1="1"
+            y2="23"
+          />
+        </symbol>
+
+        <symbol id="icon-volume" viewBox="0 0 24 24">
+          <polygon
+            fill="currentColor"
+            points="11,5 6,9 2,9 2,15 6,15 11,19"
+            stroke="currentColor"
+            stroke-linejoin="round"
+            stroke-width="1"
+          />
+          <path
+            d="M15.54 8.46a5 5 0 0 1 0 7.07"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-width="2"
+          />
+        </symbol>
+
+        <symbol id="icon-volume-off" viewBox="0 0 24 24">
+          <polygon
+            fill="currentColor"
+            points="11,5 6,9 2,9 2,15 6,15 11,19"
+            stroke="currentColor"
+            stroke-linejoin="round"
+            stroke-width="1"
+          />
+          <line
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-width="2"
+            x1="23"
+            x2="17"
+            y1="9"
+            y2="15"
+          />
+          <line
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-width="2"
+            x1="17"
+            x2="23"
+            y1="9"
+            y2="15"
+          />
+        </symbol>
+
+        <symbol id="icon-wind" viewBox="0 0 24 24">
+          <path
+            d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+          />
+          <path
+            d="M9.6 4.6A2 2 0 1 1 11 8H2"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+          />
+          <path
+            d="M12.6 19.4A2 2 0 1 0 14 16H2"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+          />
+        </symbol>
+
+        <symbol id="icon-rain" viewBox="0 0 24 24">
+          <path
+            d="M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+          />
+          <line
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-width="2"
+            x1="8"
+            x2="8"
+            y1="13"
+            y2="21"
+          />
+          <line
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-width="2"
+            x1="12"
+            x2="12"
+            y1="15"
+            y2="23"
+          />
+          <line
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-width="2"
+            x1="16"
+            x2="16"
+            y1="13"
+            y2="21"
+          />
+        </symbol>
+
+        <symbol id="icon-coffee" viewBox="0 0 24 24">
+          <path
+            d="M18 8h1a4 4 0 0 1 0 8h-1"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+          />
+          <path
+            d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+          />
+          <line
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-width="2"
+            x1="6"
+            x2="6"
+            y1="1"
+            y2="4"
+          />
+          <line
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-width="2"
+            x1="10"
+            x2="10"
+            y1="1"
+            y2="4"
+          />
+          <line
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-width="2"
+            x1="14"
+            x2="14"
+            y1="1"
+            y2="4"
+          />
+        </symbol>
+      </defs>
+    </svg>
+
+    <!-- Header -->
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="logo">
+          <svg
+            class="logo-icon"
+            viewBox="0 0 32 32"
+            width="26"
+            height="26"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <circle cx="16" cy="16" fill="none" r="12" stroke="currentColor" stroke-width="2.5" />
+            <line
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-width="2"
+              x1="16"
+              x2="16"
+              y1="8"
+              y2="16"
+            />
+            <line
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-width="1.5"
+              x1="16"
+              x2="21"
+              y1="16"
+              y2="19"
+            />
+            <circle cx="16" cy="16" fill="currentColor" r="1.5" />
+          </svg>
+          <span class="logo-name">FocusFlow</span>
+        </div>
+
+        <button
+          class="btn-icon"
+          id="settings-trigger"
+          aria-controls="settings-dialog"
+          aria-expanded="false"
+          aria-label="Open settings"
+          type="button"
+        >
+          <svg class="icon" aria-hidden="true" focusable="false">
+            <use href="#icon-settings" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="main-content" id="main">
+      <!-- Timer -->
+      <section class="timer-section" aria-label="Pomodoro timer">
+        <!-- Mode tabs -->
+        <div class="session-tabs" role="tablist" aria-label="Session type">
+          <button
+            class="tab tab--active"
+            role="tab"
+            aria-selected="true"
+            data-mode="work"
+            type="button"
+          >
+            Work
+          </button>
+          <button
+            class="tab"
+            role="tab"
+            aria-selected="false"
+            data-mode="short-break"
+            type="button"
+          >
+            Short Break
+          </button>
+          <button
+            class="tab"
+            role="tab"
+            aria-selected="false"
+            data-mode="long-break"
+            type="button"
+          >
+            Long Break
+          </button>
+        </div>
+
+        <!-- Ring + display -->
+        <div class="timer-wrapper">
+          <svg
+            class="timer-ring"
+            viewBox="0 0 260 260"
+            width="260"
+            height="260"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <defs>
+              <filter id="ring-glow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
+                <feComposite in="blur" in2="SourceGraphic" operator="over" />
+              </filter>
+            </defs>
+            <circle class="ring-track" cx="130" cy="130" r="116" />
+            <circle class="ring-glow" cx="130" cy="130" r="116" filter="url(#ring-glow)" />
+            <circle class="ring-progress" cx="130" cy="130" r="116" />
+          </svg>
+
+          <div class="timer-display" aria-live="polite" aria-atomic="true" role="timer">
+            <time class="timer-time" id="timer-time" datetime="PT25M">25:00</time>
+            <span class="timer-label" id="timer-label">Focus time</span>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="timer-controls">
+          <button
+            class="btn-icon btn-ghost"
+            id="reset-btn"
+            aria-label="Reset timer"
+            type="button"
+          >
+            <svg class="icon" aria-hidden="true" focusable="false">
+              <use href="#icon-reset" />
+            </svg>
+          </button>
+
+          <button
+            class="btn-play"
+            id="play-pause-btn"
+            aria-label="Start timer"
+            aria-pressed="false"
+            type="button"
+          >
+            <svg class="icon icon--lg" id="play-pause-icon" aria-hidden="true" focusable="false">
+              <use href="#icon-play" />
+            </svg>
+          </button>
+
+          <button
+            class="btn-icon btn-ghost"
+            id="skip-btn"
+            aria-label="Skip to next session"
+            type="button"
+          >
+            <svg class="icon" aria-hidden="true" focusable="false">
+              <use href="#icon-skip" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Session counter -->
+        <div class="session-counter">
+          <div class="session-dots" id="session-dots" aria-hidden="true">
+            <span class="dot" data-index="0"></span>
+            <span class="dot" data-index="1"></span>
+            <span class="dot" data-index="2"></span>
+            <span class="dot" data-index="3"></span>
+          </div>
+          <p class="session-count-label" id="session-count-label" aria-live="polite">
+            Session 1 of 4
+          </p>
+        </div>
+      </section>
+
+      <!-- Soundscapes -->
+      <section class="soundscape-section" aria-label="Ambient soundscapes">
+        <h2 class="section-heading">Ambience</h2>
+
+        <div class="soundscape-grid">
+          <!-- Brown noise -->
+          <div class="soundscape-card" data-sound="brown">
+            <button
+              class="soundscape-toggle"
+              aria-pressed="false"
+              data-sound="brown"
+              type="button"
+            >
+              <svg class="icon sound-icon" aria-hidden="true" focusable="false">
+                <use href="#icon-wind" />
+              </svg>
+              <span class="sound-name">Brown Noise</span>
+            </button>
+            <div class="soundscape-volume">
+              <svg class="icon icon--sm" aria-hidden="true" focusable="false">
+                <use href="#icon-volume" />
+              </svg>
+              <label class="sr-only" for="volume-brown">Brown noise volume</label>
+              <input
+                class="volume-slider"
+                id="volume-brown"
+                max="1"
+                min="0"
+                step="0.01"
+                type="range"
+                value="0.5"
+              />
+            </div>
+          </div>
+
+          <!-- Rain -->
+          <div class="soundscape-card" data-sound="rain">
+            <button
+              class="soundscape-toggle"
+              aria-pressed="false"
+              data-sound="rain"
+              type="button"
+            >
+              <svg class="icon sound-icon" aria-hidden="true" focusable="false">
+                <use href="#icon-rain" />
+              </svg>
+              <span class="sound-name">Rain</span>
+            </button>
+            <div class="soundscape-volume">
+              <svg class="icon icon--sm" aria-hidden="true" focusable="false">
+                <use href="#icon-volume" />
+              </svg>
+              <label class="sr-only" for="volume-rain">Rain volume</label>
+              <input
+                class="volume-slider"
+                id="volume-rain"
+                max="1"
+                min="0"
+                step="0.01"
+                type="range"
+                value="0.5"
+              />
+            </div>
+          </div>
+
+          <!-- Café -->
+          <div class="soundscape-card" data-sound="cafe">
+            <button
+              class="soundscape-toggle"
+              aria-pressed="false"
+              data-sound="cafe"
+              type="button"
+            >
+              <svg class="icon sound-icon" aria-hidden="true" focusable="false">
+                <use href="#icon-coffee" />
+              </svg>
+              <span class="sound-name">Café</span>
+            </button>
+            <div class="soundscape-volume">
+              <svg class="icon icon--sm" aria-hidden="true" focusable="false">
+                <use href="#icon-volume" />
+              </svg>
+              <label class="sr-only" for="volume-cafe">Café ambience volume</label>
+              <input
+                class="volume-slider"
+                id="volume-cafe"
+                max="1"
+                min="0"
+                step="0.01"
+                type="range"
+                value="0.5"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Settings dialog -->
+    <dialog class="settings-dialog" id="settings-dialog" aria-label="Settings">
+      <div class="settings-inner">
+        <div class="settings-header">
+          <h2 class="settings-title">Settings</h2>
+          <button
+            class="btn-icon"
+            id="settings-close"
+            aria-label="Close settings"
+            type="button"
+          >
+            <svg class="icon" aria-hidden="true" focusable="false">
+              <use href="#icon-close" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="settings-body">
+          <!-- Durations -->
+          <fieldset class="settings-group">
+            <legend class="settings-legend">
+              Durations
+              <span class="settings-legend-unit">(minutes)</span>
+            </legend>
+
+            <div class="settings-row">
+              <label class="settings-label" for="work-duration">Work</label>
+              <input
+                class="number-input"
+                id="work-duration"
+                max="60"
+                min="1"
+                type="number"
+                value="25"
+              />
+            </div>
+
+            <div class="settings-row">
+              <label class="settings-label" for="short-break-duration">Short break</label>
+              <input
+                class="number-input"
+                id="short-break-duration"
+                max="30"
+                min="1"
+                type="number"
+                value="5"
+              />
+            </div>
+
+            <div class="settings-row">
+              <label class="settings-label" for="long-break-duration">Long break</label>
+              <input
+                class="number-input"
+                id="long-break-duration"
+                max="60"
+                min="1"
+                type="number"
+                value="15"
+              />
+            </div>
+
+            <div class="settings-row">
+              <label class="settings-label" for="sessions-until-long"
+                >Sessions before long break</label
+              >
+              <input
+                class="number-input"
+                id="sessions-until-long"
+                max="10"
+                min="1"
+                type="number"
+                value="4"
+              />
+            </div>
+          </fieldset>
+
+          <!-- Notifications -->
+          <div class="settings-group">
+            <div class="settings-row">
+              <span class="settings-label" id="notifications-label">Desktop notifications</span>
+              <button
+                class="toggle-switch"
+                id="notifications-toggle"
+                role="switch"
+                aria-checked="false"
+                aria-labelledby="notifications-label"
+                type="button"
+              >
+                <span class="toggle-thumb" aria-hidden="true"></span>
+                <span class="sr-only">Enable desktop notifications</span>
+              </button>
+            </div>
+            <p
+              class="settings-hint"
+              id="notification-status"
+              role="status"
+              aria-live="polite"
+            ></p>
+          </div>
+
+          <!-- Danger zone -->
+          <div class="settings-group settings-group--border-top">
+            <button class="btn-danger" id="reset-sessions-btn" type="button">
+              Reset session counter
+            </button>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Toast (notification fallback) -->
+    <div class="toast" id="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <svg class="icon toast-icon" aria-hidden="true" focusable="false">
+        <use href="#icon-bell" />
+      </svg>
+      <span class="toast-message" id="toast-message"></span>
+    </div>
+
+    <script type="module" src="/js/main.js"></script>
+  </body>
+</html>
