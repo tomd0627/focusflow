@@ -2,80 +2,92 @@
 
 ## Current Phase
 
-**Phase 2 complete: Core HTML/CSS scaffold**
+**Phase 3 complete: JS functionality + Web Audio API**
 
-All static scaffold files are written and in place. The project has a complete visual structure
-and design system but no live JS functionality yet — the timer does not tick, audio does not play.
+The application is fully functional. Timer ticks, soundscapes synthesize, settings persist,
+desktop notifications fire, and all state survives page refresh.
 
 ---
 
 ## What Was Just Completed
 
-- `index.html` — Full semantic markup with inline SVG sprite (13 icons), timer ring, soundscape
-  cards, settings `<dialog>`, toast notification element
-- `css/main.css` — Complete design system with "Candlelight" palette, all component styles,
-  responsive layout (mobile → 560px → 768px), reduced-motion support, WCAG-compliant focus
-  indicators
-- `favicon.svg` — Amber clock-face SVG
-- `netlify.toml` — Cache headers (1yr immutable for JS/CSS/SVG) + security headers
-- `_redirects` — SPA fallback
-- `.gitignore` — Replaced .NET template with correct web-stack rules
-- `CLAUDE.md` — Full project documentation for future sessions
-- `js/storage.js` — **Fully implemented** (localStorage load/save/clear with defaults + error handling)
-- `js/timer.js` — **Fully implemented** (complete Pomodoro state machine — start/pause/reset/skip/setMode)
-- `js/audio.js` — Stub with correct interface; synthesis not yet wired
-- `js/notifications.js` — **Fully implemented** (request/send/isSupported)
-- `js/main.js` — Stub that imports all modules; no UI wiring yet
+**`js/audio.js`** — Full Web Audio API soundscape synthesis:
+- Brown noise: leaky integrator (1/f² spectrum) on a 5-second looped buffer
+- Rain: three layered noise bands (3800 Hz drops, 700 Hz hiss, 200 Hz rumble)
+- Café: crowd murmur (700 Hz bandpass) + chatter layer with scheduled amplitude bursts
+  + low mechanical hum (140 Hz lowpass). Burst scheduler runs every 8.5 s.
+- All soundscapes: independent GainNode → master GainNode → destination
+- `toggle()` creates/destroys nodes on demand; `setVolume()` uses `setTargetAtTime`
+  for smooth ramps
+
+**`js/main.js`** — Full DOM wiring:
+- Timer callbacks: `onTick` updates display + ring + title + storage every second
+- `onStateChange`: syncs play button, mode class, ring, title, session counter
+- `onComplete`: sends desktop notification or falls back to in-app toast
+- Ring animation: JS sets `strokeDashoffset` directly on SVG elements (CSS
+  `transition: stroke-dashoffset 0.75s linear` handles the interpolation)
+- Tab title: `"MM:SS — Focus time | FocusFlow"` while running, `"MM:SS — Paused"` when
+  paused mid-session, `"FocusFlow"` when at rest
+- Settings dialog: native `<dialog>` + `showModal()` / `close()`; settings applied on
+  `close` event (covers both button click and Escape key)
+- Notification toggle: requests permission on first enable, gracefully handles denied state
+- Session dots: dynamically rebuilt if `sessionsUntilLong` changes
+- localStorage: restored on init (volumes, settings, timer state); saved on every tick +
+  every state change; soundscape `active` state is NOT restored on reload (requires
+  user gesture to start audio)
+
+**`css/main.css`** — Three bugs fixed:
+- `tabular-nums: initial` → `font-variant-numeric: tabular-nums`
+- Removed `--ring-circumference` / `--ring-offset` CSS vars (JS owns `strokeDashoffset`)
+- Removed duplicate physical `bottom:` from `.toast` (already had `inset-block-end`)
 
 ---
 
 ## Exact Next Task
 
-**Begin Phase 3: JS functionality + Web Audio API**
+**Begin Phase 4: Pre-commit tooling**
 
-Priority order within Phase 3:
-1. Implement `audio.js` — brown noise, rain, café soundscapes via Web Audio API
-2. Wire `main.js` — connect timer, audio, notifications, storage to all DOM elements
-3. Tab title updates (`"25:00 — Focus time | FocusFlow"` updating each tick)
-4. Settings dialog open/close, form save, notification permission flow
-5. localStorage restore on page load (timer state, soundscape volumes/active states)
-6. Session counter dot rendering
-7. Timer ring `stroke-dashoffset` animation via JS
+1. Create `package.json` with all devDependencies
+2. `npm install`
+3. Configure Husky + lint-staged (pre-commit hook)
+4. Write `.prettierrc` — formatting for HTML, CSS, JS; LF line endings
+5. Write `.eslintrc.json` (ESLint flat config) — no unused vars, no console.log, enforce `===`
+6. Write `stylelint.config.js` — alphabetical property order, logical properties,
+   no duplicate selectors, no unnecessary vendor prefixes
+7. Run linters against current code and fix any violations before committing Phase 4
 
 ---
 
 ## Decisions Made This Session
 
-- **ES modules** (`type="module"`) chosen over global namespace — auto-deferred, strict mode,
-  no build tool needed. Local dev requires an HTTP server (not `file://`).
-- **`<dialog>` element** for settings — native focus trap, backdrop, Escape key, aria-modal.
-- **SVG sprite** (`<defs>` + `<symbol>` + `<use>`) — all 13 icons inlined in HTML, zero requests.
-- **Timer ring math:** viewBox 260×260, center 130,130, radius 116, circumference ≈ 729.03.
-  `stroke-dashoffset` is set via JS inline style on `.ring-progress` and `.ring-glow`.
-- **`timer.js` is fully implemented** even though it was labeled a "stub" — the state machine
-  is complete; only the DOM wiring in `main.js` is missing.
-- **Soundscape CSS:** volume controls are hidden (`opacity: 0`, `pointer-events: none`) and
-  revealed when `.soundscape-card--active` is toggled by JS.
-- **Break mode styling:** `.timer-section--break` class switches ring/button/dot colors to
-  `--c-break` (sage green `#7aac8e`) via CSS cascade.
+- **`AudioContext` construction**: called on first `toggle()` (requires user gesture). The
+  `_ensureContext()` pattern avoids the "AudioContext was not allowed to start" warning.
+- **Ring animation**: JS sets `strokeDashoffset` directly on SVG circle elements rather than
+  via CSS custom properties, because CSS transitions don't animate custom-property-derived
+  SVG presentation attributes without `@property` registration. Simpler to own it in JS.
+- **Café burst scheduler**: uses `setValueAtTime` / `linearRampToValueAtTime` on a
+  `GainNode` to schedule the next 9 seconds of chatter bursts, then `setTimeout` to
+  reschedule. Avoids timer drift vs. calling `setTimeout` repeatedly.
+- **No `active` restore on init**: browser autoplay policy blocks audio without a user
+  gesture. Volumes are restored; active states are not.
+- **Settings apply on `close` event**: handles both the X button and Escape key in one place.
+- **Import sort order**: ESLint enforces alphabetical imports — `audio`, `notifications`,
+  `storage`, `timer` (alphabetical by module filename).
 
----
+## Known Gotchas for Phase 4
 
-## Known Gotchas
-
-- `audio.js` `play()` and `stop()` methods are empty stubs — they must be implemented in
-  Phase 3 before the toggle works.
-- `main.js` exports `audio`, `notifications`, `timer` for potential console inspection during
-  development; these exports should be removed (or gated) before final deploy.
-- The settings `<dialog>` uses native `showModal()` / `close()` — the trigger button's
-  `aria-expanded` attribute must be toggled via JS alongside the dialog open/close.
-- `DM Mono` doesn't load a bold weight — font-weight 300 and 400 only. Timer renders at 300
-  (light) intentionally; don't add `font-weight: 700` to `.timer-time`.
+- Current `.gitignore` doesn't cover `.husky/` internal files that shouldn't be tracked
+  (though Husky's own `.gitignore` inside `.husky/` handles this).
+- CSS has `padding: var(--space-md) var(--space-lg)` shorthand in `.soundscape-toggle` —
+  Stylelint logical-properties plugin may flag this; shorthand `padding:` is exempt from
+  physical-vs-logical rules (shorthand is neutral).
+- ESLint will need to be told to ignore `audio.js`'s `_buildBrown`, `_buildRain`,
+  `_buildCafe` parameter names that start with `_` (they're intentionally named to match
+  the factory pattern), OR the unused-vars rule should be set to `{ "argsIgnorePattern": "^_" }`.
 
 ---
 
 ## Remaining Phases
 
-- **Phase 3** — JS functionality + Web Audio API ← next
-- **Phase 4** — Pre-commit tooling (package.json, Husky, ESLint, Stylelint, Prettier, lint-staged)
+- **Phase 4** — Pre-commit tooling (package.json, Husky, ESLint, Stylelint, Prettier) ← next
 - **Phase 5** — Recruiter audit + pre-deploy audit (Lighthouse CLI, contrast, focus, README final)

@@ -39,10 +39,8 @@
   --radius-lg: 1rem;
   --radius-full: 9999px;
 
-  /* Timer ring */
-  --ring-circumference: 729.03;
+  /* Timer ring — color token; dasharray/offset managed by JS */
   --ring-color: var(--c-accent);
-  --ring-offset: 0;
 
   /* Transitions */
   --transition-fast: 0.15s ease;
@@ -387,8 +385,7 @@ input:focus:not(:focus-visible) {
   fill: none;
   opacity: 0.45;
   stroke: var(--ring-color);
-  stroke-dasharray: var(--ring-circumference);
-  stroke-dashoffset: var(--ring-offset);
+  stroke-dasharray: 729.03;
   stroke-linecap: round;
   stroke-width: 7;
   transform: rotate(-90deg);
@@ -399,8 +396,7 @@ input:focus:not(:focus-visible) {
 .ring-progress {
   fill: none;
   stroke: var(--ring-color);
-  stroke-dasharray: var(--ring-circumference);
-  stroke-dashoffset: var(--ring-offset);
+  stroke-dasharray: 729.03;
   stroke-linecap: round;
   stroke-width: 5;
   transform: rotate(-90deg);
@@ -431,7 +427,7 @@ input:focus:not(:focus-visible) {
   font-weight: 300;
   letter-spacing: 0.04em;
   line-height: 1;
-  tabular-nums: initial;
+  font-variant-numeric: tabular-nums;
 }
 
 .timer-label {
@@ -822,7 +818,6 @@ input:focus:not(:focus-visible) {
   background: var(--c-surface-raised);
   border: 1px solid var(--c-border-strong);
   border-radius: var(--radius-lg);
-  bottom: var(--space-xl);
   box-shadow: 0 8px 24px rgb(0 0 0 / 40%);
   color: var(--c-text-primary);
   display: flex;
