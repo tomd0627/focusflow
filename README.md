@@ -2,8 +2,6 @@
 
 A Pomodoro timer with ambient soundscapes synthesized entirely via the **Web Audio API** — no audio files, no framework, no build step.
 
-**[Live demo →](https://focusflow.tomdeluca.dev)**
-
 ---
 
 ## Features
