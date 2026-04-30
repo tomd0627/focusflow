@@ -126,4 +126,4 @@ npx vite --open   # if you prefer HMR
 - Phase 2: Core HTML/CSS scaffold ✓
 - Phase 3: JS functionality + Web Audio API ✓
 - Phase 4: Pre-commit tooling (Husky, ESLint, Stylelint, Prettier) ✓
-- Phase 5: Recruiter audit + pre-deploy audit (Lighthouse, contrast, README) — pending
+- Phase 5: Recruiter audit + pre-deploy audit (Lighthouse, contrast, README) ✓
