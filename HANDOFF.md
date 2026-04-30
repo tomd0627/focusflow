@@ -12,15 +12,17 @@ desktop notifications fire, and all state survives page refresh.
 ## What Was Just Completed
 
 **`js/audio.js`** — Full Web Audio API soundscape synthesis:
+
 - Brown noise: leaky integrator (1/f² spectrum) on a 5-second looped buffer
 - Rain: three layered noise bands (3800 Hz drops, 700 Hz hiss, 200 Hz rumble)
 - Café: crowd murmur (700 Hz bandpass) + chatter layer with scheduled amplitude bursts
-  + low mechanical hum (140 Hz lowpass). Burst scheduler runs every 8.5 s.
+  - low mechanical hum (140 Hz lowpass). Burst scheduler runs every 8.5 s.
 - All soundscapes: independent GainNode → master GainNode → destination
 - `toggle()` creates/destroys nodes on demand; `setVolume()` uses `setTargetAtTime`
   for smooth ramps
 
 **`js/main.js`** — Full DOM wiring:
+
 - Timer callbacks: `onTick` updates display + ring + title + storage every second
 - `onStateChange`: syncs play button, mode class, ring, title, session counter
 - `onComplete`: sends desktop notification or falls back to in-app toast
@@ -37,6 +39,7 @@ desktop notifications fire, and all state survives page refresh.
   user gesture to start audio)
 
 **`css/main.css`** — Three bugs fixed:
+
 - `tabular-nums: initial` → `font-variant-numeric: tabular-nums`
 - Removed `--ring-circumference` / `--ring-offset` CSS vars (JS owns `strokeDashoffset`)
 - Removed duplicate physical `bottom:` from `.toast` (already had `inset-block-end`)

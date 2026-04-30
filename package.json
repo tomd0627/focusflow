@@ -1,0 +1,36 @@
+{
+  "name": "focusflow",
+  "version": "1.0.0",
+  "description": "Pomodoro timer with Web Audio API ambient soundscapes",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prepare": "husky",
+    "lint:js": "eslint js/",
+    "lint:css": "stylelint \"css/**/*.css\"",
+    "fix:js": "eslint --fix js/",
+    "fix:css": "stylelint --fix \"css/**/*.css\"",
+    "fix:format": "prettier --write ."
+  },
+  "lint-staged": {
+    "*.html": "prettier --write",
+    "*.js": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.css": [
+      "prettier --write",
+      "stylelint --fix"
+    ]
+  },
+  "devDependencies": {
+    "eslint": "^9.0.0",
+    "globals": "^15.0.0",
+    "husky": "^9.0.0",
+    "lint-staged": "^15.0.0",
+    "prettier": "^3.0.0",
+    "stylelint": "^16.0.0",
+    "stylelint-config-standard": "^36.0.0",
+    "stylelint-order": "^6.0.0"
+  }
+}

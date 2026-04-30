@@ -253,10 +253,7 @@ export function createAudio() {
 
     serialize() {
       return Object.fromEntries(
-        Object.entries(_sounds).map(([id, { active, volume }]) => [
-          id,
-          { active, volume },
-        ]),
+        Object.entries(_sounds).map(([id, { active, volume }]) => [id, { active, volume }]),
       );
     },
   };

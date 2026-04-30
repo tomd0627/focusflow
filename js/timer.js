@@ -2,11 +2,7 @@
 // Stub exports the interface contract used by main.js.
 
 export function createTimer(options = {}) {
-  const {
-    onTick,
-    onComplete,
-    onStateChange,
-  } = options;
+  const { onTick, onComplete, onStateChange } = options;
 
   let _intervalId = null;
   let _remaining = 0;

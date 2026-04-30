@@ -28,17 +28,17 @@ focusflow/
 portfolio's cool navy/cyan. Chosen because focus tools benefit from warm, lamplight-adjacent
 tones that are easy on eyes during long sessions.
 
-| Token               | Value                    |
-|---------------------|--------------------------|
-| `--c-bg`            | `#121010`                |
-| `--c-surface`       | `#1d1917`                |
-| `--c-surface-raised`| `#272220`                |
-| `--c-text-primary`  | `#f0e8d8`                |
-| `--c-text-secondary`| `#b5a394`                |
-| `--c-text-muted`    | `#756456`                |
-| `--c-accent`        | `#d4904a` (work/amber)   |
-| `--c-break`         | `#7aac8e` (break/sage)   |
-| `--c-danger`        | `#c06b52`                |
+| Token                | Value                  |
+| -------------------- | ---------------------- |
+| `--c-bg`             | `#121010`              |
+| `--c-surface`        | `#1d1917`              |
+| `--c-surface-raised` | `#272220`              |
+| `--c-text-primary`   | `#f0e8d8`              |
+| `--c-text-secondary` | `#b5a394`              |
+| `--c-text-muted`     | `#756456`              |
+| `--c-accent`         | `#d4904a` (work/amber) |
+| `--c-break`          | `#7aac8e` (break/sage) |
+| `--c-danger`         | `#c06b52`              |
 
 **Fonts:** `DM Mono` (timer display, prevents digit layout shift), `Inter` (UI labels).
 Both from Google Fonts CDN with `preconnect` + `font-display: swap`.
